@@ -1,0 +1,63 @@
+clear, cl
+
+% Search Range Definition
+% ===============================
+% The range is x=[Rn,Rx]
+
+Rn =-6; Rx = 2;
+
+x=Rn:.01:Rx;
+X= x - Rn;
+CrrFx = (1023/max(X));
+X = CrrFx * X;
+
+y= AIftfunc(x);
+figure(1), plot(x,y)
+
+
+Nchrm = 10; % Number of Chromosomes (Individuals)
+MxItr = 10;% Number of Maximume Iterations
+MrgProb = 80;% Probeilty of Marrage between chromosomes
+MutProb = 20;% Probeilty of Mutation between chromosomes
+
+
+itr = 1;
+% Initially setup chromosomes
+hold on
+for cntr = 1:Nchrm
+    Chromosome(itr,cntr).bin = Chromo(ceil(20*rand(1)));
+    u = bin2dec(Chromosome(itr,cntr).bin)/CrrFx+Rn;
+    v = AIftfunc(u);
+    plot(u,v,'g*')
+end
+
+
+
+
+while itr <= MxItr
+%     Fitness Table
+    for cntr = 1:Nchrm
+        FT(itr,cntr) = AIfitness(Chromosome(itr,cntr).bin,CrrFx,Rn);
+    end
+    
+    
+    
+%     Mating Pool
+    MtNu = 2*floor(MrgProb*Nchrm/200);
+    selChrom = randgrab(MtNu,Nchrm);
+    PairNu = length(selChrom)/2;
+    for cntr = 1: PairNu
+        [nGen(cntr,:),nGen(PairNu+cntr,:)] = AIcrossover(Chromosome(2*cntr-1).bin,Chromosome(2*cntr).bin);
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
